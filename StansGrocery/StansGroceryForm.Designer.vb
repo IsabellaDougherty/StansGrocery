@@ -41,6 +41,7 @@ Partial Class StansGroceryForm
         Me.ContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.SearchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.FilterGroupBox.SuspendLayout()
         Me.TopMenuStrip.SuspendLayout()
         Me.ContextMenuStrip.SuspendLayout()
@@ -155,13 +156,13 @@ Partial Class StansGroceryForm
         'SearchMenuItem
         '
         Me.SearchMenuItem.Name = "SearchMenuItem"
-        Me.SearchMenuItem.Size = New System.Drawing.Size(180, 26)
+        Me.SearchMenuItem.Size = New System.Drawing.Size(127, 26)
         Me.SearchMenuItem.Text = "Search"
         '
         'ExitMenuItem
         '
         Me.ExitMenuItem.Name = "ExitMenuItem"
-        Me.ExitMenuItem.Size = New System.Drawing.Size(180, 26)
+        Me.ExitMenuItem.Size = New System.Drawing.Size(127, 26)
         Me.ExitMenuItem.Text = "Exit"
         '
         'HelpToolStripMenuItem
@@ -242,4 +243,5 @@ Partial Class StansGroceryForm
     Friend WithEvents ContextMenuStrip As ContextMenuStrip
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SearchToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents OpenFileDialog As OpenFileDialog
 End Class

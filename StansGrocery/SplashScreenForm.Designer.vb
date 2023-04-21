@@ -34,7 +34,7 @@ Partial Class SplashScreenForm
         Me.SplashPictureBox.BackgroundImage = Global.StansGrocery.My.Resources.Resources.StansLogo
         Me.SplashPictureBox.ErrorImage = Global.StansGrocery.My.Resources.Resources.StansLogo
         Me.SplashPictureBox.InitialImage = Global.StansGrocery.My.Resources.Resources.StansLogo
-        Me.SplashPictureBox.Location = New System.Drawing.Point(281, 72)
+        Me.SplashPictureBox.Location = New System.Drawing.Point(594, 258)
         Me.SplashPictureBox.Name = "SplashPictureBox"
         Me.SplashPictureBox.Size = New System.Drawing.Size(227, 231)
         Me.SplashPictureBox.TabIndex = 0
@@ -43,19 +43,24 @@ Partial Class SplashScreenForm
         '
         'SplashTimer
         '
-        Me.SplashTimer.Interval = 2500
+        Me.SplashTimer.Interval = 3000
         '
         'SplashScreenForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSize = True
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.Color.BlueViolet
-        Me.ClientSize = New System.Drawing.Size(800, 420)
+        Me.ClientSize = New System.Drawing.Size(1386, 788)
         Me.Controls.Add(Me.SplashPictureBox)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.MaximumSize = New System.Drawing.Size(1920, 1080)
+        Me.MinimumSize = New System.Drawing.Size(1364, 736)
         Me.Name = "SplashScreenForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.TopMost = True
+        Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.SplashPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
