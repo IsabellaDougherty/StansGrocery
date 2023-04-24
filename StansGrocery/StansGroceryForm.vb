@@ -10,24 +10,29 @@ Option Explicit On
 Imports System.IO.Enumeration
 Imports System.IO
 Imports Microsoft.VisualBasic.Devices
+Imports System.Windows.Forms.LinkLabel
 
 Public Class StansGroceryForm
 
     Private Sub StansGroceryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim fileDialog As OpenFileDialog
-        Dim fileReader As String
-        Dim filePath As String '= "C:\Users\bella\Downloads\Github School Assignments\StansGroceryStore\StansGrocery\Resources\Grocery.txt"
+        Dim fileReader As String = ""
+        Dim filePath As String = "C:\Users\bella\Downloads\Github School Assignments\StansGroceryStore\StansGrocery\Resources\Grocery.txt"
         Dim fileNumber As Integer = FreeFile()
         Dim repeat As Boolean = True
         Dim temp As String
+        Dim lines As String()
         Dim currentRow As Integer
+        Dim testing As String = ""
 
-        SplashScreenForm.Show()
+        'SplashScreenForm.Show()
         Me.Hide()
 
         While repeat
             Try
                 FileSystem.FileOpen(fileNumber, filePath, OpenMode.Input) 'opens the grocery.txt or whatever file is chosen by user
+                FileSystem.FileClose(fileNumber) 'closes the file
+                FileGet(fileNumber, lines)
                 repeat = False
             Catch ex As Exception
                 Dim yesNo As Integer
@@ -36,6 +41,7 @@ Public Class StansGroceryForm
                     fileDialog = OpenFileDialog()
                     fileDialog.ShowDialog()
                     filePath = fileDialog.FileName 'sets chosen file path
+                    fileReader = My.Computer.FileSystem.ReadAllText(filePath)
                 Else
                     Me.Close()
                     SplashScreenForm.Close()
@@ -45,13 +51,33 @@ Public Class StansGroceryForm
             End Try
         End While
 
-        Dim lines() As String = File.ReadAllLines(filePath)
-        Static groceries(lines.Length - 1, 2) As String
-        For i As Integer = 0 To lines.Length - 1
+        'MsgBox(fileReader)
+
+        lines = fileReader.Split(New String() {"
+"}, StringSplitOptions.None)
+
+        Static food(lines.Length - 1, 3) As String
+        For i = 0 To lines.Length - 1
             Dim values() As String = lines(i).Split(","c)
-            groceries(i, 0) = values(0) ' item name
-            groceries(i, 1) = values(1) ' item aisle
-            groceries(i, 2) = values(2) ' item category
+            If values.Length = 3 Then
+                food(i, 0) = values(0) ' item name
+                food(i, 1) = values(1) ' item aisle
+                food(i, 2) = values(2) ' item category
+            Else
+                food(i, 0) = values(0) ' item name
+                food(i, 1) = values(1) ' item aisle
+                food(i, 2) = "" 'item catagory
+            End If
+        Next
+
+        For i = 0 To lines.Length - 1
+            For j = 0 To 2
+                testing += CStr(food(i, j))
+            Next
+        Next
+            MsgBox(testing)
+        For i = 0 To lines.Length - 1
+            FilterComboBox.Items.Add(food(i, 0))
         Next
 
     End Sub
