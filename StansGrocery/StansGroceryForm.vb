@@ -18,19 +18,21 @@ Public Class StansGroceryForm
     Dim fileDialog As OpenFileDialog
     Dim filePath As String = "E:\GitHub\StansGrocery\StansGrocery\Resources\Grocery.txt"
     Dim repeat As Boolean = True
+    Dim tempNum As Integer
     Dim list As New List(Of String)
     Dim onlyOne As New List(Of String)
-    Dim items As New HashSet(Of String)
-    Dim categories As New HashSet(Of String)
-    Dim aisleNumbers As New HashSet(Of String)
-    Dim lines As String() = IO.File.ReadAllLines(filePath)
+    Dim items As New List(Of String)
+    Dim categories As New List(Of String)
+    Dim aisleNumbers As New List(Of Integer)
+    Dim lines As String()
     Dim food As New List(Of (Aisle As String, Category As String, Item As String))
     Dim category As String
     Dim aisle As String
     Dim item As String
     Dim values As String()
+    Dim currentLength As Integer
     Private Sub StansGroceryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        FilterByAisleRadioButton.Checked = True
+
 
         While repeat
             Try
@@ -56,14 +58,15 @@ Public Class StansGroceryForm
                 End If
             End Try
         End While
-
+        lines = IO.File.ReadAllLines(filePath)
         For Each line As String In lines
             values = line.Split(",")
-            If (values(0).Replace("$$ITM", "").Replace("*", "").Trim()).Length = 0 Then
+            If (values(0).Replace("$$ITM", "").Replace("""", "").Trim()).Length = 0 Then
             Else
-                item = values(0).Replace("$$ITM", "").Replace("*", "").Trim() 'get the item name, remove any unnecessary characters and trim whitespace
+                item = values(0).Replace("$$ITM", "").Replace("""", "").Trim() 'get the item name, remove any unnecessary characters and trim whitespace
             End If
         Next
+        FilterByAisleRadioButton.Checked = True
     End Sub
 
     Private Sub AddItems(item As String)
@@ -72,19 +75,43 @@ Public Class StansGroceryForm
             FilterComboBox.Items.Add(item)
         End If
     End Sub
-    Private Sub AisleFilterAdd(aisle As String)
+
+    Private Sub AisleFilterAddIfChecked(aisle As String)
         categories.Clear()
         If FilterByAisleRadioButton.Checked = True Then
-            If Not aisleNumbers.Contains(aisle) Then
-                aisleNumbers.Add(aisle)
-                FilterComboBox.Items.Add(aisle)
+            If Not aisleNumbers.Contains(CInt(aisle)) Then
+                SortAisles(aisle)
             End If
         End If
     End Sub
+
+    Private Sub AisleFilterAdd()
+        For i = 0 To aisleNumbers.Count - 1
+            FilterComboBox.Items.Add(aisleNumbers(i))
+        Next
+    End Sub
+
+    Private Sub SortAisles(aisle As String)
+        Try
+            aisleNumbers.Add(CInt(aisle))
+            currentLength = aisleNumbers.Count - 1
+            For i = 0 To currentLength
+                If aisleNumbers.Count > 0 And aisleNumbers(i) > CInt(aisle) Then
+                    tempNum = aisleNumbers(currentLength)
+                    aisleNumbers(currentLength) = aisleNumbers(i)
+                    aisleNumbers(i) = tempNum
+                End If
+            Next
+        Catch ex As Exception
+        End Try
+    End Sub
+
     Private Sub CatagoryFilterAdd(category As String)
         aisleNumbers.Clear()
         If FilterByCatagoryRadioButton.Checked = True Then
-            If Not categories.Contains(category) Then
+            If category = vbNullString Then
+
+            ElseIf Not categories.Contains(category) And category IsNot "" Then
                 categories.Add(category)
                 FilterComboBox.Items.Add(category)
             End If
@@ -113,12 +140,13 @@ Public Class StansGroceryForm
             FilterComboBox.Items.Clear()
             For Each line As String In lines
                 values = line.Split(",")
-                If (values(1).Replace("##LOC", "").Replace("*", "").Trim()).Length = 0 Then
+                If (values(1).Replace("##LOC", "").Replace("""", "").Trim()).Length = 0 Then
                 Else
-                    aisle = values(1).Replace("##LOC", "").Replace("*", "").Trim() 'get the aisle number, remove any unnecessary characters and trim whitespace
-                    AisleFilterAdd(aisle)
+                    aisle = values(1).Replace("##LOC", "").Replace("""", "").Trim() 'get the aisle number, remove any unnecessary characters and trim whitespace
+                    AisleFilterAddIfChecked(aisle)
                 End If
             Next
+            AisleFilterAdd()
         End If
     End Sub
 
@@ -128,9 +156,9 @@ Public Class StansGroceryForm
             FilterComboBox.Items.Clear()
             For Each line As String In lines
                 values = line.Split(",")
-                If (values(2).Replace("%%CAT", "").Replace("*", "").Trim()).Length = 0 Then
+                If (values(2).Replace("%%CAT", "").Replace("""", "").Trim()).Length = 0 Then
                 Else
-                    category = values(2).Replace("%%CAT", "").Replace("*", "").Trim() 'get the category, remove any unnecessary characters and trim whitespace
+                    category = values(2).Replace("%%CAT", "").Replace("""", "").Trim() 'get the category, remove any unnecessary characters and trim whitespace
                     CatagoryFilterAdd(category)
                 End If
             Next
