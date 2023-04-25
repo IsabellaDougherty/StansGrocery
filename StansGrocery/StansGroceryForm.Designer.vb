@@ -51,7 +51,7 @@ Partial Class StansGroceryForm
         '
         Me.SearchTextBox.BackColor = System.Drawing.Color.Thistle
         Me.SearchTextBox.Font = New System.Drawing.Font("Constantia", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.SearchTextBox.Location = New System.Drawing.Point(588, 273)
+        Me.SearchTextBox.Location = New System.Drawing.Point(591, 71)
         Me.SearchTextBox.Name = "SearchTextBox"
         Me.SearchTextBox.PlaceholderText = "Search"
         Me.SearchTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal
@@ -62,7 +62,7 @@ Partial Class StansGroceryForm
         '
         Me.SearchButton.BackColor = System.Drawing.Color.SlateBlue
         Me.SearchButton.Font = New System.Drawing.Font("Constantia", 36.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.SearchButton.Location = New System.Drawing.Point(588, 310)
+        Me.SearchButton.Location = New System.Drawing.Point(591, 108)
         Me.SearchButton.Name = "SearchButton"
         Me.SearchButton.Size = New System.Drawing.Size(200, 99)
         Me.SearchButton.TabIndex = 1
@@ -106,7 +106,7 @@ Partial Class StansGroceryForm
         Me.FilterGroupBox.Controls.Add(Me.FilterByAisleRadioButton)
         Me.FilterGroupBox.Controls.Add(Me.FilterComboBox)
         Me.FilterGroupBox.Font = New System.Drawing.Font("Constantia", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.FilterGroupBox.Location = New System.Drawing.Point(588, 60)
+        Me.FilterGroupBox.Location = New System.Drawing.Point(591, 255)
         Me.FilterGroupBox.Name = "FilterGroupBox"
         Me.FilterGroupBox.Size = New System.Drawing.Size(200, 136)
         Me.FilterGroupBox.TabIndex = 5
