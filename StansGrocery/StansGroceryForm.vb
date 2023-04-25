@@ -73,6 +73,7 @@ Public Class StansGroceryForm
         End If
     End Sub
     Private Sub AisleFilterAdd(aisle As String)
+        categories.Clear()
         If FilterByAisleRadioButton.Checked = True Then
             If Not aisleNumbers.Contains(aisle) Then
                 aisleNumbers.Add(aisle)
@@ -81,6 +82,7 @@ Public Class StansGroceryForm
         End If
     End Sub
     Private Sub CatagoryFilterAdd(category As String)
+        aisleNumbers.Clear()
         If FilterByCatagoryRadioButton.Checked = True Then
             If Not categories.Contains(category) Then
                 categories.Add(category)
@@ -108,9 +110,7 @@ Public Class StansGroceryForm
     Private Sub FilterByAisleRadioButton_CheckedChanged(sender As Object, e As EventArgs) Handles FilterByAisleRadioButton.CheckedChanged
 
         If FilterByAisleRadioButton.Checked = True Then
-            For i = 0 To FilterComboBox.Items.Count - 1
-                FilterComboBox.Items.Clear()
-            Next
+            FilterComboBox.Items.Clear()
             For Each line As String In lines
                 values = line.Split(",")
                 If (values(1).Replace("##LOC", "").Replace("*", "").Trim()).Length = 0 Then
@@ -123,11 +123,9 @@ Public Class StansGroceryForm
     End Sub
 
     Private Sub FilterByCatagoryRadioButton_CheckedChanged(sender As Object, e As EventArgs) Handles FilterByCatagoryRadioButton.CheckedChanged
-        If FilterByCatagoryRadioButton.Checked = True Then
-            For i = 0 To FilterComboBox.Items.Count - 1
-                FilterComboBox.Items.Clear()
-            Next
 
+        If FilterByCatagoryRadioButton.Checked = True Then
+            FilterComboBox.Items.Clear()
             For Each line As String In lines
                 values = line.Split(",")
                 If (values(2).Replace("%%CAT", "").Replace("*", "").Trim()).Length = 0 Then
@@ -138,4 +136,5 @@ Public Class StansGroceryForm
             Next
         End If
     End Sub
+
 End Class
