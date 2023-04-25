@@ -11,28 +11,35 @@ Imports System.IO.Enumeration
 Imports System.IO
 Imports Microsoft.VisualBasic.Devices
 Imports System.Windows.Forms.LinkLabel
+Imports System.Windows
+Imports System.Net.WebRequestMethods
 
 Public Class StansGroceryForm
-
+    Dim fileDialog As OpenFileDialog
+    Dim filePath As String = "E:\GitHub\StansGrocery\StansGrocery\Resources\Grocery.txt"
+    Dim repeat As Boolean = True
+    Dim list As New List(Of String)
+    Dim onlyOne As New List(Of String)
+    Dim items As New HashSet(Of String)
+    Dim categories As New HashSet(Of String)
+    Dim aisleNumbers As New HashSet(Of String)
+    Dim lines As String() = IO.File.ReadAllLines(filePath)
+    Dim food As New List(Of (Aisle As String, Category As String, Item As String))
+    Dim category As String
+    Dim aisle As String
+    Dim item As String
+    Dim values As String()
     Private Sub StansGroceryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim fileDialog As OpenFileDialog
-        Dim fileReader As String = ""
-        Dim filePath As String = "C:\Users\bella\Downloads\Github School Assignments\StansGroceryStore\StansGrocery\Resources\Grocery.txt"
-        Dim fileNumber As Integer = FreeFile()
-        Dim repeat As Boolean = True
-        Dim temp As String
-        Dim lines As String()
-        Dim currentRow As Integer
-        Dim testing As String = ""
-
-        'SplashScreenForm.Show()
-        Me.Hide()
+        FilterByAisleRadioButton.Checked = True
 
         While repeat
             Try
-                FileSystem.FileOpen(fileNumber, filePath, OpenMode.Input) 'opens the grocery.txt or whatever file is chosen by user
-                FileSystem.FileClose(fileNumber) 'closes the file
-                FileGet(fileNumber, lines)
+                FileSystem.FileOpen(1, filePath, OpenMode.Input) 'opens the grocery.txt or whatever file is chosen by user
+                While Not EOF(1)
+                    Dim line As String = LineInput(1)
+                    list.Add(line)
+                End While
+                FileSystem.FileClose(1) 'closes the file
                 repeat = False
             Catch ex As Exception
                 Dim yesNo As Integer
@@ -41,7 +48,6 @@ Public Class StansGroceryForm
                     fileDialog = OpenFileDialog()
                     fileDialog.ShowDialog()
                     filePath = fileDialog.FileName 'sets chosen file path
-                    fileReader = My.Computer.FileSystem.ReadAllText(filePath)
                 Else
                     Me.Close()
                     SplashScreenForm.Close()
@@ -51,35 +57,36 @@ Public Class StansGroceryForm
             End Try
         End While
 
-        'MsgBox(fileReader)
-
-        lines = fileReader.Split(New String() {"
-"}, StringSplitOptions.None)
-
-        Static food(lines.Length - 1, 3) As String
-        For i = 0 To lines.Length - 1
-            Dim values() As String = lines(i).Split(","c)
-            If values.Length = 3 Then
-                food(i, 0) = values(0) ' item name
-                food(i, 1) = values(1) ' item aisle
-                food(i, 2) = values(2) ' item category
+        For Each line As String In lines
+            values = line.Split(",")
+            If (values(0).Replace("$$ITM", "").Replace("*", "").Trim()).Length = 0 Then
             Else
-                food(i, 0) = values(0) ' item name
-                food(i, 1) = values(1) ' item aisle
-                food(i, 2) = "" 'item catagory
+                item = values(0).Replace("$$ITM", "").Replace("*", "").Trim() 'get the item name, remove any unnecessary characters and trim whitespace
             End If
         Next
+    End Sub
 
-        For i = 0 To lines.Length - 1
-            For j = 0 To 2
-                testing += CStr(food(i, j))
-            Next
-        Next
-            MsgBox(testing)
-        For i = 0 To lines.Length - 1
-            FilterComboBox.Items.Add(food(i, 0))
-        Next
-
+    Private Sub AddItems(item As String)
+        If Not items.Contains(item) Then
+            items.Add(item)
+            FilterComboBox.Items.Add(item)
+        End If
+    End Sub
+    Private Sub AisleFilterAdd(aisle As String)
+        If FilterByAisleRadioButton.Checked = True Then
+            If Not aisleNumbers.Contains(aisle) Then
+                aisleNumbers.Add(aisle)
+                FilterComboBox.Items.Add(aisle)
+            End If
+        End If
+    End Sub
+    Private Sub CatagoryFilterAdd(category As String)
+        If FilterByCatagoryRadioButton.Checked = True Then
+            If Not categories.Contains(category) Then
+                categories.Add(category)
+                FilterComboBox.Items.Add(category)
+            End If
+        End If
     End Sub
 
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutMenuItem.Click
@@ -95,6 +102,40 @@ Public Class StansGroceryForm
             SplashScreenForm.Close()
             AboutForm.Close()
             End
+        End If
+    End Sub
+
+    Private Sub FilterByAisleRadioButton_CheckedChanged(sender As Object, e As EventArgs) Handles FilterByAisleRadioButton.CheckedChanged
+
+        If FilterByAisleRadioButton.Checked = True Then
+            For i = 0 To FilterComboBox.Items.Count - 1
+                FilterComboBox.Items.Clear()
+            Next
+            For Each line As String In lines
+                values = line.Split(",")
+                If (values(1).Replace("##LOC", "").Replace("*", "").Trim()).Length = 0 Then
+                Else
+                    aisle = values(1).Replace("##LOC", "").Replace("*", "").Trim() 'get the aisle number, remove any unnecessary characters and trim whitespace
+                    AisleFilterAdd(aisle)
+                End If
+            Next
+        End If
+    End Sub
+
+    Private Sub FilterByCatagoryRadioButton_CheckedChanged(sender As Object, e As EventArgs) Handles FilterByCatagoryRadioButton.CheckedChanged
+        If FilterByCatagoryRadioButton.Checked = True Then
+            For i = 0 To FilterComboBox.Items.Count - 1
+                FilterComboBox.Items.Clear()
+            Next
+
+            For Each line As String In lines
+                values = line.Split(",")
+                If (values(2).Replace("%%CAT", "").Replace("*", "").Trim()).Length = 0 Then
+                Else
+                    category = values(2).Replace("%%CAT", "").Replace("*", "").Trim() 'get the category, remove any unnecessary characters and trim whitespace
+                    CatagoryFilterAdd(category)
+                End If
+            Next
         End If
     End Sub
 End Class
