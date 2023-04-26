@@ -29,8 +29,12 @@ Public Class StansGroceryForm
     Dim category As String
     Dim aisle As String
     Dim item As String
+    Dim itm As String
     Dim values As String()
+    Dim products As String()
     Dim currentLength As Integer
+    Dim count As Integer = 0
+
 
 
     'Loading the form and adding information to combo box
@@ -66,7 +70,9 @@ Public Class StansGroceryForm
             values = line.Split(",")
             If (values(0).Replace("$$ITM", "").Replace("""", "").Trim()).Length = 0 Then
             Else
-                item = values(0).Replace("$$ITM", "").Replace("""", "").Trim() 'get the item name, remove any unnecessary characters and trim whitespace
+                products(count) = values(0).Replace("$$ITM", "").Replace("""", "").Trim() 'get the item name, remove any unnecessary characters and trim whitespace
+                'count += 1
+
             End If
         Next
         FilterByAisleRadioButton.Checked = True
@@ -174,7 +180,32 @@ Public Class StansGroceryForm
                     CatagoryFilterAdd(category)
                 End If
             Next
+            FilterComboBox.Sorted = True
         End If
+
     End Sub
 
+
+    Private Sub ItemList()
+        For i = 0 To products.Length - 1
+            DisplayListBox.Items.Add(products(i))
+        Next
+    End Sub
+
+    Private Sub SearchButton_Click(sender As Object, e As EventArgs) Handles SearchButton.Click
+        If SearchTextBox.Text = "" Then
+            MsgBox("Please enter your searching querry.")
+        Else
+            DisplayListBox.Refresh()
+            For i = 0 To products.Length - 1
+                For Each letter In products(i)
+                    itm += letter
+                    If itm = SearchTextBox.Text And Not DisplayListBox.Items.Contains(products(i)) Then
+                        DisplayListBox.Items.Add(products(i))
+                    End If
+                Next
+                itm = ""
+            Next
+        End If
+    End Sub
 End Class
