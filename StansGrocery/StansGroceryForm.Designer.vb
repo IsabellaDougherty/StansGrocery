@@ -94,11 +94,10 @@ Partial Class StansGroceryForm
         '
         Me.DisplayLabel.AutoSize = True
         Me.DisplayLabel.Font = New System.Drawing.Font("Constantia", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.DisplayLabel.Location = New System.Drawing.Point(12, 29)
+        Me.DisplayLabel.Location = New System.Drawing.Point(12, 34)
         Me.DisplayLabel.Name = "DisplayLabel"
-        Me.DisplayLabel.Size = New System.Drawing.Size(71, 23)
+        Me.DisplayLabel.Size = New System.Drawing.Size(0, 23)
         Me.DisplayLabel.TabIndex = 4
-        Me.DisplayLabel.Text = "Display"
         '
         'FilterGroupBox
         '

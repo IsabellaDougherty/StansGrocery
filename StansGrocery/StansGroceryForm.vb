@@ -11,6 +11,7 @@ Imports System.IO.Enumeration
 Imports System.IO
 Imports Microsoft.VisualBasic.Devices
 Imports System.Windows
+Imports System.Windows.Markup
 
 Public Class StansGroceryForm
     Dim fileDialog As OpenFileDialog
@@ -31,7 +32,9 @@ Public Class StansGroceryForm
     Dim values As String()
     Dim products As String()
     Dim currentLength As Integer
-    Dim count As Integer = 0
+    Dim countOne As Integer = 0
+    Dim countTwo As Integer = 0
+    Dim catalog(,) As String
 
 
 
@@ -61,18 +64,38 @@ Public Class StansGroceryForm
                 End If
             End Try
         End While
-        lines = IO.File.ReadAllLines(filePath)
-        For Each line As String In lines
 
+
+        lines = IO.File.ReadAllLines(filePath)
+
+
+        For Each line As String In lines
             values = line.Split(",")
             If (values(0).Replace("$$ITM", "").Replace("""", "").Trim()).Length = 0 Then
             Else
-                ReDim Preserve products(count)
-                products(count) = values(0).Replace("$$ITM", "").Replace("""", "").Trim() 'get the item name, remove any unnecessary characters and trim whitespace
-                count += 1
+                CreateCatalog(values)
+                ReDim Preserve products(countOne)
+                products(countOne) = values(0).Replace("$$ITM", "").Replace("""", "").Trim() 'get the item name, remove any unnecessary characters and trim whitespace
+                DisplayListBox.Items.Add(products(countOne))
+                countOne += 1
             End If
         Next
         FilterByAisleRadioButton.Checked = True
+    End Sub
+
+    Private Sub CreateCatalog(values() As String)
+        If values(0) Is Nothing Then
+            values(0) = ""
+        ElseIf values(1) Is Nothing Then
+            values(1) = ""
+        ElseIf values(2) Is Nothing Then
+            values(2) = ""
+        End If
+        ReDim Preserve catalog(2, countTwo)
+        catalog(0, countTwo) = values(0).Replace("$$ITM", "").Replace("""", "").Trim()
+        catalog(1, countTwo) = values(1).Replace("##LOC", "").Replace("""", "").Trim()
+        catalog(2, countTwo) = values(2).Replace("%%CAT", "").Replace("""", "").Trim()
+        countTwo += 1
     End Sub
 
     Private Sub SearchButton_Click(sender As Object, e As EventArgs) Handles SearchButton.Click
@@ -92,6 +115,7 @@ Public Class StansGroceryForm
                 DisplayListBox.Refresh() ' Refresh the list box to display the updated list
             End If
         End If
+        DisplayListBox.Sorted = True
     End Sub
 
     'Add items to display box
@@ -201,13 +225,47 @@ Public Class StansGroceryForm
 
     End Sub
 
-
     Private Sub ItemList()
         For i = 0 To products.Length - 1
             DisplayListBox.Items.Add(products(i))
         Next
     End Sub
 
+    Private Sub DisplayListBox_ItemSelected(sender As Object, e As EventArgs) Handles DisplayListBox.SelectedValueChanged
+        Dim itemNumber As New Integer
+        Dim itemSelected As String = "(Not being assigned)"
+        Dim aisleStated As String = "(Not being assigned)"
+        Dim catagoryStated As String = "(Not being assigned)"
+        Dim listBoxText As String = CStr(DisplayListBox.SelectedItem)
+        Dim displayText = "You will find "
 
+        For i = 0 To catalog.GetLength(1) - 1
+            If catalog(0, i) = listBoxText Then
+                itemNumber = i
+            End If
+        Next
+
+        If catalog(0, itemNumber) Is "" Then
+            itemSelected = "(item not found)"
+        Else
+            itemSelected = catalog(0, itemNumber)
+        End If
+
+        If catalog(1, itemNumber) Is "" Then
+            aisleStated = "(aisle not found)"
+        Else
+            aisleStated = catalog(1, itemNumber)
+        End If
+
+        If catalog(2, itemNumber) Is "" Then
+            catagoryStated = "(catagory not found)"
+        Else
+            catagoryStated = catalog(2, itemNumber)
+        End If
+
+        displayText += itemSelected + " on aisle " + aisleStated + " with the " + catagoryStated
+
+        DisplayLabel.Text = displayText
+    End Sub
 
 End Class
