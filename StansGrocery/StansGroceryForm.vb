@@ -128,11 +128,9 @@ Public Class StansGroceryForm
 
     'If the aisle number isn't already added will add it
     Private Sub AisleFilterAddIfChecked(aisle As String)
-        categories.Clear()
-        If FilterByAisleRadioButton.Checked = True Then
-            If Not aisleNumbers.Contains(CInt(aisle)) Then
-                SortAisles(aisle)
-            End If
+        'categories.Clear()
+        If Not aisleNumbers.Contains(CInt(aisle)) Then
+            SortAisles(aisle)
         End If
     End Sub
 
@@ -161,14 +159,12 @@ Public Class StansGroceryForm
 
     'Adds the catagories to the combo box so long as that catagory hasn't already been added before
     Private Sub CatagoryFilterAdd(category As String)
-        aisleNumbers.Clear()
-        If FilterByCatagoryRadioButton.Checked = True Then
-            If category = vbNullString Then
+        'aisleNumbers.Clear()
+        If category = vbNullString Then
 
-            ElseIf Not categories.Contains(category) And category IsNot "" Then
-                categories.Add(category)
-                FilterComboBox.Items.Add(category)
-            End If
+        ElseIf Not categories.Contains(category) And category IsNot "" Then
+            categories.Add(category)
+            FilterComboBox.Items.Add(category)
         End If
     End Sub
     'Displays about form
@@ -190,28 +186,28 @@ Public Class StansGroceryForm
     End Sub
 
     Private Sub ShowAllRadioButton_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllRadioButton.CheckedChanged
-        If ShowAllRadioButton.Checked = True Then
-            FilterComboBox.Items.Clear()
-            For Each line As String In lines
-                values = line.Split(",")
-                If (values(1).Replace("##LOC", "").Replace("""", "").Trim()).Length = 0 Then
-                Else
-                    aisle = values(1).Replace("##LOC", "").Replace("""", "").Trim() 'get the aisle number, remove any unnecessary characters and trim whitespace
-                    AisleFilterAddIfChecked(aisle)
-                End If
-            Next
-            AisleFilterAdd()
-            For Each line As String In lines
-                values = line.Split(",")
-                If (values(1).Replace("##LOC", "").Replace("""", "").Trim()).Length = 0 Then
-                Else
-                    aisle = values(1).Replace("##LOC", "").Replace("""", "").Trim() 'get the aisle number, remove any unnecessary characters and trim whitespace
-                    AisleFilterAddIfChecked(aisle)
-                End If
-            Next
-            CatagoryFilterAdd(category)
-        End If
+        FilterComboBox.Items.Clear()
+        categories.Clear()
+        aisleNumbers.Clear()
+        For Each line As String In lines
+            values = line.Split(",")
+            If (values(2).Replace("%%CAT", "").Replace("""", "").Trim()).Length = 0 Then
+            Else
+                category = values(2).Replace("%%CAT", "").Replace("""", "").Trim() 'get the category, remove any unnecessary characters and trim whitespace
+                CatagoryFilterAdd(category)
+            End If
+        Next
         FilterComboBox.Sorted = True
+        FilterComboBox.Sorted = False
+        For Each line As String In lines
+            values = line.Split(",")
+            If (values(1).Replace("##LOC", "").Replace("""", "").Trim()).Length = 0 Then
+            Else
+                aisle = values(1).Replace("##LOC", "").Replace("""", "").Trim() 'get the aisle number, remove any unnecessary characters and trim whitespace
+                AisleFilterAddIfChecked(aisle)
+            End If
+        Next
+        AisleFilterAdd()
     End Sub
 
     'Makes it so only aisle numbers are displayed in the combo box
@@ -219,6 +215,7 @@ Public Class StansGroceryForm
 
         If FilterByAisleRadioButton.Checked = True Then
             FilterComboBox.Items.Clear()
+            categories.Clear()
             For Each line As String In lines
                 values = line.Split(",")
                 If (values(1).Replace("##LOC", "").Replace("""", "").Trim()).Length = 0 Then
@@ -233,7 +230,7 @@ Public Class StansGroceryForm
 
     'Makes it so only catagories are displayed in the combo box
     Private Sub FilterByCatagoryRadioButton_CheckedChanged(sender As Object, e As EventArgs) Handles FilterByCatagoryRadioButton.CheckedChanged
-
+        aisleNumbers.Clear()
         If FilterByCatagoryRadioButton.Checked = True Then
             FilterComboBox.Items.Clear()
             For Each line As String In lines
