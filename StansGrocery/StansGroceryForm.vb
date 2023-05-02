@@ -10,9 +10,7 @@ Option Explicit On
 Imports System.IO.Enumeration
 Imports System.IO
 Imports Microsoft.VisualBasic.Devices
-Imports System.Windows.Forms.LinkLabel
 Imports System.Windows
-Imports System.Net.WebRequestMethods
 
 Public Class StansGroceryForm
     Dim fileDialog As OpenFileDialog
@@ -39,8 +37,6 @@ Public Class StansGroceryForm
 
     'Loading the form and adding information to combo box
     Private Sub StansGroceryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-
         While repeat
             Try
                 FileSystem.FileOpen(1, filePath, OpenMode.Input) 'opens the grocery.txt or whatever file is chosen by user
@@ -67,15 +63,35 @@ Public Class StansGroceryForm
         End While
         lines = IO.File.ReadAllLines(filePath)
         For Each line As String In lines
+
             values = line.Split(",")
             If (values(0).Replace("$$ITM", "").Replace("""", "").Trim()).Length = 0 Then
             Else
+                ReDim Preserve products(count)
                 products(count) = values(0).Replace("$$ITM", "").Replace("""", "").Trim() 'get the item name, remove any unnecessary characters and trim whitespace
-                'count += 1
-
+                count += 1
             End If
         Next
         FilterByAisleRadioButton.Checked = True
+    End Sub
+
+    Private Sub SearchButton_Click(sender As Object, e As EventArgs) Handles SearchButton.Click
+        If SearchTextBox.Text = "" Then
+            MsgBox("Please enter your searching querry.")
+        Else
+            DisplayListBox.Items.Clear()
+            If products IsNot Nothing AndAlso products.Length > 0 Then
+                For Each product In products
+                    If product.IndexOf(SearchTextBox.Text, StringComparison.CurrentCultureIgnoreCase) >= 0 Then
+                        DisplayListBox.Items.Add(product)
+                    End If
+                Next
+                If DisplayListBox.Items.Count = 0 Then
+                    MsgBox("No matching items found.")
+                End If
+                DisplayListBox.Refresh() ' Refresh the list box to display the updated list
+            End If
+        End If
     End Sub
 
     'Add items to display box
@@ -192,20 +208,6 @@ Public Class StansGroceryForm
         Next
     End Sub
 
-    Private Sub SearchButton_Click(sender As Object, e As EventArgs) Handles SearchButton.Click
-        If SearchTextBox.Text = "" Then
-            MsgBox("Please enter your searching querry.")
-        Else
-            DisplayListBox.Refresh()
-            For i = 0 To products.Length - 1
-                For Each letter In products(i)
-                    itm += letter
-                    If itm = SearchTextBox.Text And Not DisplayListBox.Items.Contains(products(i)) Then
-                        DisplayListBox.Items.Add(products(i))
-                    End If
-                Next
-                itm = ""
-            Next
-        End If
-    End Sub
+
+
 End Class
