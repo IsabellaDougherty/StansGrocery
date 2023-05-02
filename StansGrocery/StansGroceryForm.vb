@@ -80,7 +80,7 @@ Public Class StansGroceryForm
                 countOne += 1
             End If
         Next
-        FilterByAisleRadioButton.Checked = True
+        ShowAllRadioButton.Checked = True
     End Sub
 
     Private Sub CreateCatalog(values() As String)
@@ -171,7 +171,6 @@ Public Class StansGroceryForm
             End If
         End If
     End Sub
-
     'Displays about form
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutMenuItem.Click
         Me.Hide()
@@ -188,6 +187,31 @@ Public Class StansGroceryForm
             AboutForm.Close()
             End
         End If
+    End Sub
+
+    Private Sub ShowAllRadioButton_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllRadioButton.CheckedChanged
+        If ShowAllRadioButton.Checked = True Then
+            FilterComboBox.Items.Clear()
+            For Each line As String In lines
+                values = line.Split(",")
+                If (values(1).Replace("##LOC", "").Replace("""", "").Trim()).Length = 0 Then
+                Else
+                    aisle = values(1).Replace("##LOC", "").Replace("""", "").Trim() 'get the aisle number, remove any unnecessary characters and trim whitespace
+                    AisleFilterAddIfChecked(aisle)
+                End If
+            Next
+            AisleFilterAdd()
+            For Each line As String In lines
+                values = line.Split(",")
+                If (values(1).Replace("##LOC", "").Replace("""", "").Trim()).Length = 0 Then
+                Else
+                    aisle = values(1).Replace("##LOC", "").Replace("""", "").Trim() 'get the aisle number, remove any unnecessary characters and trim whitespace
+                    AisleFilterAddIfChecked(aisle)
+                End If
+            Next
+            CatagoryFilterAdd(category)
+        End If
+        FilterComboBox.Sorted = True
     End Sub
 
     'Makes it so only aisle numbers are displayed in the combo box
@@ -267,5 +291,6 @@ Public Class StansGroceryForm
 
         DisplayLabel.Text = displayText
     End Sub
+
 
 End Class
