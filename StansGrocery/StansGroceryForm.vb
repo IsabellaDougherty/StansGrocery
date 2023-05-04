@@ -193,6 +193,43 @@ Public Class StansGroceryForm
 
     End Sub
 
+    'Shows what aisle and category the item selected is located in
+    Private Sub DisplayListBox_ItemSelected(sender As Object, e As EventArgs) Handles DisplayListBox.SelectedValueChanged
+        Dim itemNumber As New Integer
+        Dim itemSelected As String = "(Not being assigned)"
+        Dim aisleStated As String = "(Not being assigned)"
+        Dim catagoryStated As String = "(Not being assigned)"
+        Dim listBoxText As String = CStr(DisplayListBox.SelectedItem)
+        Dim displayText = "You will find "
+
+        For i = 0 To catalog.GetLength(1) - 1
+            If catalog(0, i) = listBoxText Then
+                itemNumber = i
+            End If
+        Next
+
+        If catalog(0, itemNumber) Is "" Then
+            itemSelected = "(item not found)"
+        Else
+            itemSelected = catalog(0, itemNumber)
+        End If
+
+        If catalog(1, itemNumber) Is "" Then
+            aisleStated = "(aisle not found)"
+        Else
+            aisleStated = catalog(1, itemNumber)
+        End If
+
+        If catalog(2, itemNumber) Is "" Then
+            catagoryStated = "(catagory not found)"
+        Else
+            catagoryStated = catalog(2, itemNumber)
+        End If
+
+        displayText += itemSelected + " on aisle " + aisleStated + " with the " + catagoryStated
+
+        DisplayLabel.Text = displayText
+    End Sub
 
     'Filters items being displayed in the list box
     Private Sub FilterItems()
@@ -301,51 +338,11 @@ Public Class StansGroceryForm
         End If
     End Sub
 
-
-
+    'Adds items from the file to a list
     Private Sub ItemList()
         For i = 0 To products.Length - 1
             DisplayListBox.Items.Add(products(i))
         Next
     End Sub
-
-
-    Private Sub DisplayListBox_ItemSelected(sender As Object, e As EventArgs) Handles DisplayListBox.SelectedValueChanged
-        Dim itemNumber As New Integer
-        Dim itemSelected As String = "(Not being assigned)"
-        Dim aisleStated As String = "(Not being assigned)"
-        Dim catagoryStated As String = "(Not being assigned)"
-        Dim listBoxText As String = CStr(DisplayListBox.SelectedItem)
-        Dim displayText = "You will find "
-
-        For i = 0 To catalog.GetLength(1) - 1
-            If catalog(0, i) = listBoxText Then
-                itemNumber = i
-            End If
-        Next
-
-        If catalog(0, itemNumber) Is "" Then
-            itemSelected = "(item not found)"
-        Else
-            itemSelected = catalog(0, itemNumber)
-        End If
-
-        If catalog(1, itemNumber) Is "" Then
-            aisleStated = "(aisle not found)"
-        Else
-            aisleStated = catalog(1, itemNumber)
-        End If
-
-        If catalog(2, itemNumber) Is "" Then
-            catagoryStated = "(catagory not found)"
-        Else
-            catagoryStated = catalog(2, itemNumber)
-        End If
-
-        displayText += itemSelected + " on aisle " + aisleStated + " with the " + catagoryStated
-
-        DisplayLabel.Text = displayText
-    End Sub
-
 
 End Class
