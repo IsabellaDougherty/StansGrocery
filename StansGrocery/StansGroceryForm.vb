@@ -83,6 +83,7 @@ Public Class StansGroceryForm
         ShowAllRadioButton.Checked = True
     End Sub
 
+    'Creates a 2D array that holds all the items, aisles, and catagories that are given in the file.
     Private Sub CreateCatalog(values() As String)
         If values(0) Is Nothing Then
             values(0) = ""
@@ -98,6 +99,7 @@ Public Class StansGroceryForm
         countTwo += 1
     End Sub
 
+    'Takes the in put of the search text button and pulls up all items available from the 
     Private Sub SearchButton_Click(sender As Object, e As EventArgs) Handles SearchButton.Click
         If SearchTextBox.Text = "" Then
             MsgBox("Please enter your searching querry.")
@@ -167,6 +169,7 @@ Public Class StansGroceryForm
             FilterComboBox.Items.Add(category)
         End If
     End Sub
+
     'Displays about form
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutMenuItem.Click
         Me.Hide()
@@ -246,11 +249,13 @@ Public Class StansGroceryForm
 
     End Sub
 
+
     Private Sub ItemList()
         For i = 0 To products.Length - 1
             DisplayListBox.Items.Add(products(i))
         Next
     End Sub
+
 
     Private Sub DisplayListBox_ItemSelected(sender As Object, e As EventArgs) Handles DisplayListBox.SelectedValueChanged
         Dim itemNumber As New Integer
